@@ -9,4 +9,18 @@ class ProblemsTest extends FunSuite {
 
     assert(result == "20 12 17 21")
   }
+
+
+  test("Problem2: transcribing DNA to RNA"){
+
+    val result = Problems.problem2("GATGGAACTTGACTACGTAAATT")
+
+    assert(result == "GAUGGAACUUGACUACGUAAAUU")
+  }
+
+  test("Problem 3: generating the complement of a string of DNA Bases"){
+    val result = Problems.problem3("AAAACCCGGT")
+
+    assert(result == "ACCGGGTTTT")
+  }
 }
