@@ -2,10 +2,21 @@ package uk.org.warry.rosalind
 
 import uk.org.warry.rosalind.RnaBase.RnaBase
 
+/**
+ * Enumeration that defines the bases present in DNA, conversions and other operations
+ */
 object DnaBase extends Enumeration {
   type DnaBase = Value
+
   val A, C, G, T = Value
 
+  /**
+   * Converts from a character to the corresponding DnaBase value.
+   *
+   * @param ch the character which must be one of A, C, G  or T
+   * @return the DnaBase value
+   * @throws IllegalArgumentException if ch is not recognised
+   */
   def fromChar(ch: Char): DnaBase = ch match {
     case 'A' => DnaBase.A
     case 'C' => DnaBase.C
@@ -14,17 +25,37 @@ object DnaBase extends Enumeration {
     case _ => throw new IllegalArgumentException("must be one of A,C,G or T")
   }
 
-  def toChar(base: DnaBase) = base match {
+  /**
+   * Converts a DnaBase value to a character.
+   * @param base the DnaBase value.
+   * @return The corresponding character.
+   */
+  def toChar(base: DnaBase): Char = base match {
     case A => 'A'
     case C => 'C'
     case G => 'G'
     case T => 'T'
   }
 
+  /**
+   * Converts a string of base characters to a sequence of DnaBases.
+   * @param letters
+   * @return
+   */
   def fromString(letters: String): Iterator[DnaBase] = letters.iterator.map(fromChar)
 
+  /**
+   * Converts a sequence of DnaBases to a string containing the letters of the bases.
+   * @param bases
+   * @return
+   */
   def toString(bases: Seq[DnaBase]): String = bases.map(toChar).mkString
 
+  /**
+   * Converts a DNA base to the equivalent RNA base.
+   * @param base
+   * @return
+   */
   def toRnaBase(base: DnaBase): RnaBase = base match {
     case DnaBase.A => RnaBase.A
     case DnaBase.C => RnaBase.C
@@ -32,6 +63,11 @@ object DnaBase extends Enumeration {
     case DnaBase.T => RnaBase.U
   }
 
+  /**
+   * Counts the number of each base found in a string.
+   * @param letters
+   * @return
+   */
   def countBases(letters: String) : BaseCount =
     fromString(letters).foldLeft (BaseCount()) ((acc: BaseCount, base: DnaBase) => base match {
         case A => acc.copy(aCount = acc.aCount + 1)
@@ -40,6 +76,11 @@ object DnaBase extends Enumeration {
         case T => acc.copy(tCount = acc.tCount + 1)
       })
 
+  /**
+   * Find the complement of a base: A <=> T, C <=> G
+   * @param base
+   * @return
+   */
   def complement(base: DnaBase): DnaBase = base match {
     case A => T
     case C => G
@@ -54,7 +95,18 @@ object DnaBase extends Enumeration {
    * @return the new sequence
    */
   def complement(bases: Iterator[DnaBase]): Seq[DnaBase] =
+    /*
+     * The fold pushes each new value onto the intermediate list, which also
+     * has the effect of reversing the order, which is just what we want in this case!
+     */
     bases.foldLeft (List[DnaBase]()) ((lst, b) => complement(b) :: lst)
 }
 
+/**
+ * Case class for returning the number of bases in a string - as returned by the `countBases` method.
+ * @param aCount
+ * @param cCount
+ * @param gCount
+ * @param tCount
+ */
 case class BaseCount( aCount: Int = 0, cCount: Int = 0, gCount: Int = 0, tCount: Int = 0 )
