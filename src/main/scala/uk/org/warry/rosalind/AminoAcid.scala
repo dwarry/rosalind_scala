@@ -1,0 +1,135 @@
+package uk.org.warry.rosalind
+
+import java.awt.geom.NoninvertibleTransformException
+
+import uk.org.warry.rosalind.DnaBase.DnaBase
+import uk.org.warry.rosalind.RnaBase.RnaBase
+
+import scala.collection.Iterator
+
+object AminoAcid extends Enumeration {
+  type AminoAcid = Value
+
+  val A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y = Value
+
+  /**
+   * Converts a character to the corresponding Amino Acid code.
+   * @param ch the character being converted
+   * @return the AminoAcid code
+   * @throws IllegalArgumentException if ch does not match an AminoAcid code.
+   */
+  def fromChar(ch: Char): AminoAcid = ch match {
+    case 'A' => A
+    case 'C' => C
+    case 'D' => D
+    case 'E' => E
+    case 'F' => F
+    case 'G' => G
+    case 'H' => H
+    case 'I' => I
+    case 'K' => K
+    case 'L' => L
+    case 'M' => M
+    case 'N' => N
+    case 'P' => P
+    case 'Q' => Q
+    case 'R' => R
+    case 'S' => S
+    case 'T' => T
+    case 'V' => V
+    case 'W' => W
+    case 'Y' => Y
+    case _ => throw new IllegalArgumentException("Unknown Amino Acid code =" + ch)
+  }
+
+  /**
+   * Converts an AminoAcid code to the corresponding character.
+   * @param aa the AminoAcid code
+   * @return the corresponding character
+   */
+  def toChar(aa: AminoAcid): Char = aa match {
+    case A => 'A'
+    case C => 'C'
+    case D => 'D'
+    case E => 'E'
+    case F => 'F'
+    case G => 'G'
+    case H => 'H'
+    case I => 'I'
+    case K => 'K'
+    case L => 'L'
+    case M => 'M'
+    case N => 'N'
+    case P => 'P'
+    case Q => 'Q'
+    case R => 'R'
+    case S => 'S'
+    case T => 'T'
+    case V => 'V'
+    case W => 'W'
+    case Y => 'Y'
+  }
+
+  /**
+   * Translate a codon (three RnaBases) to the corresponding Amino Acid, or Stop value
+   * @param codon - sequence of three RnaBases
+   * @return Some(AminoAcid) or None if `codon` signifies a STOP
+   */
+  def codonToAminoAcid(codon: Seq[RnaBase]): Option[AminoAcid] = {
+    def isUorC(b:RnaBase) = (b == RnaBase.U || b == RnaBase.C)
+
+    codon match {
+      case Seq(RnaBase.U, RnaBase.U, x)         => Some(if(isUorC(x)) F else L)
+      case Seq(RnaBase.U, RnaBase.C, _)         => Some(S)
+
+      case Seq(RnaBase.U, RnaBase.A, x)         => if(isUorC(x)) Some(Y) else None
+
+      case Seq(RnaBase.U, RnaBase.G, RnaBase.U) => Some(C)
+      case Seq(RnaBase.U, RnaBase.G, RnaBase.C) => Some(C)
+      case Seq(RnaBase.U, RnaBase.G, RnaBase.A) => None
+      case Seq(RnaBase.U, RnaBase.G, RnaBase.G) => Some(W)
+
+      case Seq(RnaBase.C, RnaBase.U, _)         => Some(L)
+
+      case Seq(RnaBase.C, RnaBase.C, _)         => Some(P)
+
+      case Seq(RnaBase.C, RnaBase.A, x)         => Some(if(isUorC(x)) H else Q)
+
+      case Seq(RnaBase.C, RnaBase.G, _)         => Some(R)
+
+      case Seq(RnaBase.A, RnaBase.U, x)         => Some(if(x == RnaBase.G) M else I)
+
+      case Seq(RnaBase.A, RnaBase.C, _)         => Some(T)
+
+      case Seq(RnaBase.A, RnaBase.A, x)         => Some(if(isUorC(x)) N else K)
+
+      case Seq(RnaBase.A, RnaBase.G, x)         => Some(if(isUorC(x)) S else R)
+
+      case Seq(RnaBase.G, RnaBase.U, _)         => Some(V)
+
+      case Seq(RnaBase.G, RnaBase.C, _)         => Some(A)
+
+      case Seq(RnaBase.G, RnaBase.A, x)         => Some(if(isUorC(x)) D else E)
+
+      case Seq(RnaBase.G, RnaBase.G, _)         => Some(G)
+    }
+  }
+
+  /**
+   * Converts a series of Codons to the corresponding series of AminoAcid.
+   * @param codons - the sequence of codons
+   * @return series of AminoAcids or Stop
+   */
+  def translateCodonsToProteinString(codons: Iterator[Seq[RnaBase]]): Iterator[Option[AminoAcid]] =
+    codons.map(codonToAminoAcid).takeWhile({_.isDefined})
+
+  /**
+   * Converts a protein string back to a normal string
+   * @param aas iterator of AminoAcids / Stop values
+   * @return String containing the letters of amino acids or '.' for stop markers.
+   */
+  def proteinStringToString(aas: Iterator[Option[AminoAcid]]): String = {
+    val chars: Iterator[Option[Char]] = aas.map({_.map(toChar)})
+    chars.map({_.getOrElse('.')}).mkString
+  }
+}

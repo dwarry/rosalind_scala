@@ -39,14 +39,14 @@ object DnaBase extends Enumeration {
 
   /**
    * Converts a string of base characters to a sequence of DnaBases.
-   * @param letters
-   * @return
+   * @param letters string containing the letters to convert to bases
+   * @return an Iterator that will return the DnaBase values.
    */
   def fromString(letters: String): Iterator[DnaBase] = letters.iterator.map(fromChar)
 
   /**
    * Converts a sequence of DnaBases to a string containing the letters of the bases.
-   * @param bases
+   * @param bases the sequence to convert.
    * @return
    */
   def toString(bases: Seq[DnaBase]): String = bases.map(toChar).mkString
@@ -100,6 +100,7 @@ object DnaBase extends Enumeration {
      * has the effect of reversing the order, which is just what we want in this case!
      */
     bases.foldLeft (List[DnaBase]()) ((lst, b) => complement(b) :: lst)
+
 }
 
 /**

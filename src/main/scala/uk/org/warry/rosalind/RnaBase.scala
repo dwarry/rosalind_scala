@@ -62,4 +62,10 @@ object RnaBase extends Enumeration {
   }
 
 
+  /**
+   * Converts an iterator of DnaBases to groups of three bases - codons which can encode an amino acid
+   * @param bases
+   * @return
+   */
+  def rnaStringToCodons(bases: Iterator[RnaBase]): bases.GroupedIterator[RnaBase] = bases.grouped(3).withPartial(false)
 }
