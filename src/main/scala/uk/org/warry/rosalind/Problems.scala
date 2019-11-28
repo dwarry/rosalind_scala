@@ -14,6 +14,7 @@ object Problems {
     problemId match {
       case "dna" => dna(arguments.next())
       case "fib" => fib(arguments.next(), arguments.next())
+      case "gc" => gc(arguments)
       case "prot" => prot(arguments.next())
       case "rna" => rna(arguments.next())
       case "revc" => revc(arguments.next())
@@ -32,6 +33,21 @@ object Problems {
     val k = kString.toInt
 
     Combinatorics.fib(n, k).toString
+  }
+
+  def gc(fasta: Iterator[String]): String = {
+    val lines = Fasta.processLines(fasta)
+    val (title, gc) = lines.foldLeft (("", 0.0)) ((acc, line) => {
+      val (title, bases) = line
+      val gc = DnaBase.gcRatio(bases)
+
+      if(gc > acc._2)
+        (title, gc)
+      else
+        acc
+    })
+
+    f"${title}\n${gc * 100}%2.6f"
   }
 
   def prot(rnaString: String): String = {

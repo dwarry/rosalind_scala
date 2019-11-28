@@ -34,4 +34,20 @@ class ProblemsTest extends FunSuite {
     val result = Problems.fib("5", "3")
     assert(result == "19")
   }
+
+  test("gc calculates the %age of GC bases in a string"){
+    val data = """>Rosalind_6404
+        |CCTGCGGAAGATCGGCACTAGAATAGCCAGAACCGTTTCTCTGAGGCTTCCGGCCTTCCC
+        |TCCCACTAATAATTCTGAGG
+        |>Rosalind_5959
+        |CCATCGGTAGCGCATCCTTAGTCCAATTAAGTCCCTATCCAGGCGCTCCGCCGAAGGTCT
+        |ATATCCATTTGTCAGCAGACACGC
+        |>Rosalind_0808
+        |CCACCCTCGTGGTATGGCTAGGCATTCAGGAACCGGAGAACGCTTCAGACCAGCCCGGAC
+        |TGGGAACCTGCGGGCAGTAGGTGGAAT""".stripMargin
+
+    val result = Problems.gc(data.split(raw"\r?\n").iterator)
+
+    assert(result == "Rosalind_0808\n60.919540")
+  }
 }

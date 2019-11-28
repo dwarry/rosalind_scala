@@ -101,6 +101,12 @@ object DnaBase extends Enumeration {
      */
     bases.foldLeft (List[DnaBase]()) ((lst, b) => complement(b) :: lst)
 
+  def gcRatio(bases: String): Double = {
+    val counts = countBases (bases)
+    val gc = counts.cCount + counts.gCount
+    val all = counts.aCount + counts.tCount + gc
+    gc / all.toDouble
+  }
 }
 
 /**

@@ -1,6 +1,8 @@
 package uk.org.warry.rosalind
 import java.net.URL
 
+import scala.io.Source
+
 object RosalindApp extends App {
   if (args.length < 1 || args.length > 2) {
     printUsage()
@@ -19,14 +21,14 @@ object RosalindApp extends App {
 
 
   def getLines: Iterator[String] = {
-    def readFromFileUrl(url: String) = {
-      val src = io.Source.fromURL(new URL(url))
-      src.getLines()
-    }
-
     args.length match {
       case 1 => io.Source.stdin.getLines()
-      case 2 if args(1).startsWith("file:") => readFromFileUrl(args(1))
+      case 2 if args(1).startsWith("file:") => {
+        println(args(1))
+        val f = args(1).substring(5)
+        println(f)
+        Source.fromFile(f).getLines()
+      }
       case _ => args.tail.iterator
     }
   }
