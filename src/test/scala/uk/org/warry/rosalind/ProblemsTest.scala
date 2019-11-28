@@ -34,4 +34,10 @@ class ProblemsTest extends FunSuite {
     val result = Problems.fib("5", "3")
     assert(result == "19")
   }
+
+  test("fibd includes mortality"){
+    val result = Problems.fibd("6", "3")
+
+    assert(result == "4")
+  }
 }

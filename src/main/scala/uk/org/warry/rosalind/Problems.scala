@@ -14,6 +14,7 @@ object Problems {
     problemId match {
       case "dna" => dna(arguments.next())
       case "fib" => fib(arguments.next(), arguments.next())
+      case "fibd" => fibd(arguments.next(), arguments.next())
       case "prot" => prot(arguments.next())
       case "rna" => rna(arguments.next())
       case "revc" => revc(arguments.next())
@@ -32,6 +33,12 @@ object Problems {
     val k = kString.toInt
 
     Combinatorics.fib(n, k).toString
+  }
+
+  def fibd(nString: String, mString: String): String = {
+    val n = nString.toInt
+    val m = mString.toInt
+    Combinatorics.fib_with_three_month_mortality(n, m).toString
   }
 
   def prot(rnaString: String): String = {
