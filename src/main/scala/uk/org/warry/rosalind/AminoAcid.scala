@@ -71,6 +71,13 @@ object AminoAcid extends Enumeration {
   }
 
   /**
+   * Converts a string to an iterator of Amino Acids
+   * @param aaString the string to convert
+   * @return the corresponding sequence of AminoAcids
+   */
+  def fromString(aaString: String): Iterator[AminoAcid] = aaString.iterator.map(fromChar)
+
+  /**
    * Translate a codon (three RnaBases) to the corresponding Amino Acid, or Stop value
    * @param codon - sequence of three RnaBases
    * @return Some(AminoAcid) or None if `codon` signifies a STOP
@@ -132,4 +139,35 @@ object AminoAcid extends Enumeration {
     val chars: Iterator[Option[Char]] = aas.map({_.map(toChar)})
     chars.map({_.getOrElse('.')}).mkString
   }
+
+
+  /**
+   * Returns the monoistopic mass of the specified AminoAcid
+   * @param aa the AminoAcid
+   * @return the weight of the AminoAcid
+   */
+  def massOf(aa: AminoAcid): Double = aa match {
+    case A =>  71.03711
+    case C => 103.00919
+    case D => 115.02694
+    case E => 129.04259
+    case F => 147.06841
+    case G =>  57.02146
+    case H => 137.05891
+    case I => 113.08406
+    case K => 128.09496
+    case L => 113.08406
+    case M => 131.04049
+    case N => 114.04293
+    case P =>  97.05276
+    case Q => 128.05858
+    case R => 156.10111
+    case S =>  87.03203
+    case T => 101.04768
+    case V =>  99.06841
+    case W => 186.07931
+    case Y => 163.06333
+  }
+
+  def massOf(aas: Iterator[AminoAcid]): Double = aas.foldLeft (0.0) (_ + massOf(_))
 }

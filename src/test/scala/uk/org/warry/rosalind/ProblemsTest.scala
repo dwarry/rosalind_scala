@@ -50,4 +50,17 @@ class ProblemsTest extends FunSuite {
 
     assert(result == "Rosalind_0808\n60.919540")
   }
+
+  test("prtm calculates the mass of a protein string"){
+    val data = "SKADYEK"
+    val result = Problems.prtm(data)
+
+    assert(result == "821.392")
+  }
+
+  test("subs find subsequences of a DnaString"){
+    val result = Problems.subs("GATATATGCATATACTT", "ATAT")
+
+    assert(result == "2 4 10")
+  }
 }

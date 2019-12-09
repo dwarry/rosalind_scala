@@ -16,8 +16,10 @@ object Problems {
       case "fib" => fib(arguments.next(), arguments.next())
       case "gc" => gc(arguments)
       case "prot" => prot(arguments.next())
+      case "prtm" => prtm(arguments.next())
       case "rna" => rna(arguments.next())
       case "revc" => revc(arguments.next())
+      case "subs" => subs(arguments.next(), arguments.next())
       case _   => throw new IllegalArgumentException("Unknown problem: " + problemId)
     }
 
@@ -56,6 +58,11 @@ object Problems {
     AminoAcid.proteinStringToString(aas)
   }
 
+  def prtm(aaString: String): String = {
+    val aminoAcids = AminoAcid.fromString(aaString)
+    AminoAcid.massOf(aminoAcids).formatted("%.3f")
+  }
+
   def revc(dnaString: String): String = {
     val bases: Iterator[DnaBase] = DnaBase.fromString(dnaString)
     val comp = DnaBase.complement(bases)
@@ -65,5 +72,15 @@ object Problems {
   def rna(dnaString: String): String = {
     val rna = DnaBase.fromString(dnaString).map(DnaBase.toRnaBase).mkString
     rna
+  }
+
+  def subs(dnaString: String, subString: String): String = {
+    val dna = DnaBase.fromString(dnaString)
+    val sub = DnaBase.fromString(subString)
+
+    val indexes = Sequences.findSubsequenceIndexes(dna, sub)
+
+    // output needs to be 1-based and in ascending order
+    indexes.map(_ + 1).reverse.mkString(" ")
   }
 }
