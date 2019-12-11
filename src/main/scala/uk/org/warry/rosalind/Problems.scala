@@ -12,8 +12,10 @@ object Problems {
     // the codes for each problem are the last component of the URL for the problem statement on the Project Rosalind,
     // so "dna" is the problem found at "http://rosalind.info/problems/dna/"
     problemId match {
+      case "cons" => cons(arguments)
       case "dna" => dna(arguments.next())
       case "fib" => fib(arguments.next(), arguments.next())
+      case "hamm" => hamm(arguments.next(), arguments.next())
       case "gc" => gc(arguments)
       case "prot" => prot(arguments.next())
       case "prtm" => prtm(arguments.next())
@@ -23,6 +25,51 @@ object Problems {
       case _   => throw new IllegalArgumentException("Unknown problem: " + problemId)
     }
 
+  def cons(fasta: Iterator[String]): String = {
+
+
+    def countBasesInSlices(iterators: List[Iterator[Char]]): List[BaseCount] = {
+      // assuming all the iterators are of equal length, this will return
+      // either the next value from all the iterators, or None if the first
+      // iterator has been exhausted.
+      def nextSlice(iterators: List[Iterator[Char]]): Option[List[Char]] = {
+        if (iterators.head.hasNext) {
+          Some(iterators.map(_.next()))
+        }
+        else
+          None
+      }
+
+      // Recursively calculate the count of bases in each slice and build a list of the results.
+      // The recursion terminates when nextSlice returns None.
+      def addSlice(acc: List[BaseCount], slice: Option[List[Char]]): List[BaseCount] =
+        slice match {
+          case Some(x) => { DnaBase.countBases(x.mkString("")) :: addSlice(acc, nextSlice(iterators))}
+          case None => acc
+        }
+
+      addSlice(List.empty[BaseCount], nextSlice(iterators))
+    }
+
+    val lines = Fasta.processLines(fasta)
+
+    val bases: List[Iterator[Char]] = lines.map(_._2.iterator)
+
+    val baseCounts: List[BaseCount] = countBasesInSlices(bases)
+
+    val sb = new StringBuilder(1024)
+
+    val consensus = baseCounts.map(_.mostLikely()).mkString("")
+
+    sb.append(consensus)
+
+    sb.append("\r\nA: ").append(baseCounts.map(_.aCount).mkString(" "))
+    sb.append("\r\nC: ").append(baseCounts.map(_.cCount).mkString(" "))
+    sb.append("\r\nG: ").append(baseCounts.map(_.gCount).mkString(" "))
+    sb.append("\r\nT: ").append(baseCounts.map(_.tCount).mkString(" "))
+
+    sb.result()
+  }
 
   def dna(bases: String): String = {
     val baseCount = DnaBase.countBases(bases)
@@ -35,6 +82,11 @@ object Problems {
     val k = kString.toInt
 
     Combinatorics.fib(n, k).toString
+  }
+
+  def hamm[T](a: Iterable[T], b: Iterable[T]): String = {
+    val result = a.zip(b).count( x => x._1 != x._2)
+    result.toString()
   }
 
   def gc(fasta: Iterator[String]): String = {

@@ -1,5 +1,6 @@
 package uk.org.warry.rosalind
 
+import uk.org.warry.rosalind.DnaBase.DnaBase
 import uk.org.warry.rosalind.RnaBase.RnaBase
 
 /**
@@ -53,8 +54,8 @@ object DnaBase extends Enumeration {
 
   /**
    * Converts a DNA base to the equivalent RNA base.
-   * @param base
-   * @return
+   * @param base the DNA Base
+   * @return the corresponding RNA base
    */
   def toRnaBase(base: DnaBase): RnaBase = base match {
     case DnaBase.A => RnaBase.A
@@ -65,8 +66,8 @@ object DnaBase extends Enumeration {
 
   /**
    * Counts the number of each base found in a string.
-   * @param letters
-   * @return
+   * @param letters the DNA string to be processed
+   * @return BaseCount instance containing the counts of each base.
    */
   def countBases(letters: String) : BaseCount =
     fromString(letters).foldLeft (BaseCount()) ((acc: BaseCount, base: DnaBase) => base match {
@@ -78,8 +79,8 @@ object DnaBase extends Enumeration {
 
   /**
    * Find the complement of a base: A <=> T, C <=> G
-   * @param base
-   * @return
+   * @param base the DNA base.
+   * @return the complementary DNA base.
    */
   def complement(base: DnaBase): DnaBase = base match {
     case A => T
@@ -111,9 +112,23 @@ object DnaBase extends Enumeration {
 
 /**
  * Case class for returning the number of bases in a string - as returned by the `countBases` method.
- * @param aCount
- * @param cCount
- * @param gCount
- * @param tCount
+ * @param aCount Number of A bases
+ * @param cCount Number of C bases
+ * @param gCount Number of G bases
+ * @param tCount Number of T bases
  */
-case class BaseCount( aCount: Int = 0, cCount: Int = 0, gCount: Int = 0, tCount: Int = 0 )
+case class BaseCount( aCount: Int = 0, cCount: Int = 0, gCount: Int = 0, tCount: Int = 0 ) {
+
+  /**
+   * Given a particular BaseCount instance, what is the most likely bases
+   * @return The Bases with the highest count. If there are multiple bases with the same
+   *         count the result will be in the order A,C,G,T.
+   */
+  def mostLikely(): DnaBase = {
+    if(aCount >= cCount && aCount >= gCount && aCount >= tCount) DnaBase.A
+    else if (cCount >= gCount && cCount >= tCount) DnaBase.C
+    else if (gCount >= tCount) DnaBase.G
+    else DnaBase.T
+  }
+}
+
