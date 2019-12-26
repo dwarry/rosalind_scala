@@ -4,7 +4,7 @@ import java.net.URL
 import scala.io.Source
 
 object RosalindApp extends App {
-  if (args.length < 1 || args.length > 2) {
+  if (args.length < 2) {
     printUsage()
     System.exit(1)
   }

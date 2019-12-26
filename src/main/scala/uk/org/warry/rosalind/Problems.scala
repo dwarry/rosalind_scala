@@ -17,6 +17,7 @@ object Problems {
       case "fib" => fib(arguments.next(), arguments.next())
       case "hamm" => hamm(arguments.next(), arguments.next())
       case "gc" => gc(arguments)
+      case "iprb" => iprb(arguments.next(), arguments.next(), arguments.next())
       case "prot" => prot(arguments.next())
       case "prtm" => prtm(arguments.next())
       case "rna" => rna(arguments.next())
@@ -84,11 +85,6 @@ object Problems {
     Combinatorics.fib(n, k).toString
   }
 
-  def hamm[T](a: Iterable[T], b: Iterable[T]): String = {
-    val result = a.zip(b).count( x => x._1 != x._2)
-    result.toString()
-  }
-
   def gc(fasta: Iterator[String]): String = {
     val lines = Fasta.processLines(fasta)
     val (title, gc) = lines.foldLeft (("", 0.0)) ((acc, line) => {
@@ -102,6 +98,18 @@ object Problems {
     })
 
     f"${title}\n${gc * 100}%2.6f"
+  }
+
+  def hamm[T](a: Iterable[T], b: Iterable[T]): String = {
+    val result = a.zip(b).count( x => x._1 != x._2)
+    result.toString()
+  }
+
+  def iprb(k: String, m: String, n: String): String = {
+
+    val result = Probability.dominantProbability(k.toInt, m.toInt, n.toInt)
+
+    "%1.5f".format(result)
   }
 
   def prot(rnaString: String): String = {

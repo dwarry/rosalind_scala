@@ -96,4 +96,10 @@ class ProblemsTest extends FunSuite {
 
     assert(result == expected)
   }
+
+  test("iprb calculates the chance of a dominant") {
+    val result = Probability.dominantProbability(2, 2, 2)
+
+    assert("%1.5f".format(result) == "0.78333")
+  }
 }
