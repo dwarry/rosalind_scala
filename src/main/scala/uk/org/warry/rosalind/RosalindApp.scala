@@ -24,9 +24,7 @@ object RosalindApp extends App {
     args.length match {
       case 1 => io.Source.stdin.getLines()
       case 2 if args(1).startsWith("file:") => {
-        println(args(1))
         val f = args(1).substring(5)
-        println(f)
         Source.fromFile(f).getLines()
       }
       case _ => args.tail.iterator
