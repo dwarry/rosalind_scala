@@ -23,10 +23,10 @@ object RosalindApp extends App {
   def getLines: Iterator[String] = {
     args.length match {
       case 1 => io.Source.stdin.getLines()
-      case 2 if args(1).startsWith("file:") => {
+      case 2 if args(1).startsWith("file:") =>
         val f = args(1).substring(5)
+        //noinspection SourceNotClosed
         Source.fromFile(f).getLines()
-      }
       case _ => args.tail.iterator
     }
   }

@@ -83,7 +83,7 @@ object AminoAcid extends Enumeration {
    * @return Some(AminoAcid) or None if `codon` signifies a STOP
    */
   def codonToAminoAcid(codon: Seq[RnaBase]): Option[AminoAcid] = {
-    def isUorC(b:RnaBase) = (b == RnaBase.U || b == RnaBase.C)
+    def isUorC(b:RnaBase) = b == RnaBase.U || b == RnaBase.C
 
     codon match {
       case Seq(RnaBase.U, RnaBase.U, x)         => Some(if(isUorC(x)) F else L)

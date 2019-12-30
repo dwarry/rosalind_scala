@@ -25,8 +25,8 @@ object RnaBase extends Enumeration {
 
   /**
    * Converts an RnaBase value to the corresponding character representation
-   * @param base
-   * @return
+   * @param base the RNA base
+   * @return the corresponding letter
    */
   def toChar(base: RnaBase):Char = base match {
     case A => 'A'
@@ -37,15 +37,15 @@ object RnaBase extends Enumeration {
 
   /**
    * Converts a string containing a list of RNA Bases to the corresponding RnaBase values.
-   * @param letters
-   * @return
+   * @param letters the characters of a rna string
+   * @return an Iterator of the RNABase values
    */
   def fromString(letters: String): Iterator[RnaBase] = letters.iterator.map(fromChar)
 
   /**
    * Converts a sequence of RnaBase values to the corresponding string of letters.
-   * @param bases
-   * @return
+   * @param bases sequence of RnaBases
+   * @return string representing the sequences of Rna Bases
    */
   def toString(bases: Seq[RnaBase]): String = bases.map(toChar).mkString
 
@@ -64,8 +64,8 @@ object RnaBase extends Enumeration {
 
   /**
    * Converts an iterator of DnaBases to groups of three bases - codons which can encode an amino acid
-   * @param bases
-   * @return
+   * @param bases an iterator of RNA Bases
+   * @return iterator of Codons (three RNA bases)
    */
   def rnaStringToCodons(bases: Iterator[RnaBase]): bases.GroupedIterator[RnaBase] = bases.grouped(3).withPartial(false)
 }

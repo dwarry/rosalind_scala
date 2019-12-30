@@ -45,7 +45,7 @@ object Problems {
       // The recursion terminates when nextSlice returns None.
       def addSlice(acc: List[BaseCount], slice: Option[List[Char]]): List[BaseCount] =
         slice match {
-          case Some(x) => { DnaBase.countBases(x.mkString("")) :: addSlice(acc, nextSlice(iterators))}
+          case Some(x) => DnaBase.countBases(x.mkString("")) :: addSlice(acc, nextSlice(iterators))
           case None => acc
         }
 
@@ -97,12 +97,12 @@ object Problems {
         acc
     })
 
-    f"${title}\n${gc * 100}%2.6f"
+    f"$title\n${gc * 100}%2.6f"
   }
 
   def hamm[T](a: Iterable[T], b: Iterable[T]): String = {
     val result = a.zip(b).count( x => x._1 != x._2)
-    result.toString()
+    result.toString
   }
 
   def iprb(k: String, m: String, n: String): String = {

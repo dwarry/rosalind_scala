@@ -34,7 +34,7 @@ object Probability {
    *
    * @param numHomozygousDominant  number of population with both dominant alleles
    * @param numHeterozygous        number of population with mixed alleles
-   * @param numHomozygousRecessive number of popukation with both recessive alleles
+   * @param numHomozygousRecessive number of population with both recessive alleles
    * @return probability [0, 1] of an offspring inheriting a Dominant allele
    */
   def dominantProbability(numHomozygousDominant: Int, numHeterozygous: Int, numHomozygousRecessive: Int): Double = {
@@ -53,8 +53,8 @@ object Probability {
     // Probabilities of selecting the second individual if the first was heterozygous
     val (p_yY_YY, p_yY_yY, p_yY_yy) = probs(numHomozygousDominant, numHeterozygous - 1, numHomozygousRecessive)
 
-    // Probabilities of selecting the second individual if the first was homzygous-recessive
-    val (p_yy_YY, p_yy_yY, p_yy_yy) = probs(numHomozygousDominant, numHeterozygous, numHomozygousRecessive - 1)
+    // Probabilities of selecting the second individual if the first was homozygous-recessive
+    val (p_yy_YY, p_yy_yY, _) = probs(numHomozygousDominant, numHeterozygous, numHomozygousRecessive - 1)
 
     p_YY +
       (p_yY * p_yY_YY) + (p_yY * p_yY_yY * 0.75) + (p_yY * p_yY_yy * 0.5) +

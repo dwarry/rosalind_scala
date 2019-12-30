@@ -1,5 +1,7 @@
 package uk.org.warry.rosalind
 
+import scala.annotation.tailrec
+
 object Combinatorics {
 
   /**
@@ -34,6 +36,7 @@ object Combinatorics {
      * In this case, `fib_tail` is a "closure" that captures the value of
      * `k` rather than it being passed in explicitly.
      */
+    @tailrec
     def fib_tail(m: Int, a: Long, b: Long): Long =
       m match {
         case 0 => a

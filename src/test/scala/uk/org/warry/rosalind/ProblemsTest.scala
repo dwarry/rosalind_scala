@@ -1,6 +1,7 @@
 package uk.org.warry.rosalind
 import org.scalatest.FunSuite
 
+//noinspection SpellCheckingInspection
 class ProblemsTest extends FunSuite {
 
   test("Problem1 counts bases") {
