@@ -23,6 +23,7 @@ object Problems {
       case "rna" => rna(arguments.next())
       case "revc" => revc(arguments.next())
       case "subs" => subs(arguments.next(), arguments.next())
+      case "tran" => tran(arguments)
       case _   => throw new IllegalArgumentException("Unknown problem: " + problemId)
     }
 
@@ -142,5 +143,27 @@ object Problems {
 
     // output needs to be 1-based and in ascending order
     indexes.map(_ + 1).reverse.mkString(" ")
+  }
+
+  def tran(fasta: Iterator[String]): String = {
+
+    val lines = Fasta.processLines(fasta).map(x => DnaBase.fromString(x._2)).take(2)
+
+    lines match {
+      case Seq(a, b) =>
+        val (numTransitions, numTransversions) = a.zip(b).foldLeft((0,0))((acc, bases) =>
+          if (bases._1 == bases._2)
+            acc
+          else if (DnaBase.isTransition(bases))
+            (acc._1 + 1, acc._2)
+          else
+            (acc._1, acc._2 + 1)
+        )
+
+        val ratio = numTransitions.doubleValue() / numTransversions
+
+        "%2.11f".format(ratio)
+      case _ => ""
+    }
   }
 }

@@ -108,6 +108,20 @@ object DnaBase extends Enumeration {
     val all = counts.aCount + counts.tCount + gc
     gc / all.toDouble
   }
+
+  /**
+   * Determines whether two bases represent a transition or a transversion.
+   * @param bases the pair of bases
+   * @return true if the pair represents a transition, false indicates a transversion.
+   */
+  def isTransition(bases: (DnaBase, DnaBase)): Boolean =
+    bases match {
+      case (DnaBase.A, DnaBase.G) => true
+      case (DnaBase.C, DnaBase.T) => true
+      case (DnaBase.G, DnaBase.A) => true
+      case (DnaBase.T, DnaBase.C) => true
+      case _                      => false
+    }
 }
 
 /**
@@ -131,4 +145,3 @@ case class BaseCount( aCount: Int = 0, cCount: Int = 0, gCount: Int = 0, tCount:
     else DnaBase.T
   }
 }
-

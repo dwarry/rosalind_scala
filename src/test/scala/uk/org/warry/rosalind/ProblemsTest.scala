@@ -103,4 +103,16 @@ class ProblemsTest extends FunSuite {
 
     assert("%1.5f".format(result) == "0.78333")
   }
+
+  test("tran calculates the transition/transversion ratio"){
+    val data = """>Rosalind_0209
+               |GCAACGCACAACGAAAACCCTTAGGGACTGGATTATTTCGTGATCGTTGTAGTTATTGGA
+               |AGTACGGGCATCAACCCAGTT
+               |>Rosalind_2200
+               |TTATCTGACAAAGAAAGCCGTCAACGGCTGGATAATTTCGCGATCGTGCTGGTTACTGGC
+               |GGTACGAGTGTTCCTTTGGGT""".stripMargin
+    val result = Problems.tran(data.split(raw"\r?\n").iterator)
+
+    assert(result == "1.21428571429")
+  }
 }
