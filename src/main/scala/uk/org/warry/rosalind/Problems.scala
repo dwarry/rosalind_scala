@@ -38,7 +38,7 @@ object Problems {
   def fibd(nString: String, mString: String): String = {
     val n = nString.toInt
     val m = mString.toInt
-    Combinatorics.fib_with_three_month_mortality(n, m).toString
+    Combinatorics.fibd(n, m).toString
   }
 
   def prot(rnaString: String): String = {

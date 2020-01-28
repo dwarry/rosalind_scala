@@ -36,8 +36,21 @@ class ProblemsTest extends FunSuite {
   }
 
   test("fibd includes mortality"){
-    val result = Problems.fibd("6", "3")
+    def check(a: String, b: String, expected: String): Unit = {
+      val result = Problems.fibd(a, b)
 
-    assert(result == "4")
+      assert(result == expected)
+    }
+
+    check("6", "3", "4")
+
+    // other test cases from the questions section of the problem. Hope they're correct!
+    check("99", "16", "215182717852492203481")
+
+    check("100", "4", "24382819596721629")
+
+    check("70", "10", "150851612688734")
+
+    check("150", "30", "9968924833182193029336126851509")
   }
 }
