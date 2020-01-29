@@ -15,6 +15,7 @@ object Problems {
       case "cons" => cons(arguments)
       case "dna" => dna(arguments.next())
       case "fib" => fib(arguments.next(), arguments.next())
+      case "fibd" => fibd(arguments.next(), arguments.next())
       case "hamm" => hamm(arguments.next(), arguments.next())
       case "gc" => gc(arguments)
       case "iprb" => iprb(arguments.next(), arguments.next(), arguments.next())
@@ -84,6 +85,12 @@ object Problems {
     val k = kString.toInt
 
     Combinatorics.fib(n, k).toString
+  }
+
+  def fibd(nString: String, mString: String): String = {
+    val n = nString.toInt
+    val m = mString.toInt
+    Combinatorics.fibd(n, m).toString
   }
 
   def gc(fasta: Iterator[String]): String = {

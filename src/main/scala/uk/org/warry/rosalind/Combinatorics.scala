@@ -1,6 +1,7 @@
 package uk.org.warry.rosalind
 
 import scala.annotation.tailrec
+import scala.collection.mutable
 
 object Combinatorics {
 
@@ -45,4 +46,36 @@ object Combinatorics {
 
     fib_tail(n, 0, 1)
   }
+
+  // https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html
+  // private val fibs: LazyList[BigInt] = BigInt(0) #:: BigInt(1) #:: fibs.zip(fibs.tail).map { n => n._1 + n._2 }
+
+  /**
+   * Calculates the mortal fibonacci sequence. Rabbits only reproduce after the first generation,
+   * and only live a set number of generations.
+   * @param n number of generations of rabbits
+   * @param m number of generations that rabbits live
+   * @return the number of rabbits alive after n
+   */
+  def fibd(n: Int, m:Int): BigInt  = {
+
+    // previously computed values.
+    var memo = scala.collection.mutable.HashMap((1, BigInt(1)), (2, BigInt(1)))
+
+    // Does the actual calculation - only calculate the value of the intermediate results once.
+    def mortalFib(i: Int): BigInt = {
+      i match {
+        case x if x <= 0 => 0
+        case _ if memo.contains(i) => memo(i)
+        case _ =>
+          val range = (i - m) to  (i - 2)
+          val result = range.map(mortalFib).sum
+          memo.addOne((i, result))
+          result
+      }
+    }
+
+    mortalFib(n + 1)
+  }
+
 }
