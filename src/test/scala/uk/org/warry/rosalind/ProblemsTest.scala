@@ -1,6 +1,8 @@
 package uk.org.warry.rosalind
 import org.scalatest.FunSuite
 
+import scala.collection.immutable.ArraySeq
+
 //noinspection SpellCheckingInspection
 class ProblemsTest extends FunSuite {
 
@@ -133,5 +135,11 @@ class ProblemsTest extends FunSuite {
     val result = Problems.tran(data.split(raw"\r?\n").iterator)
 
     assert(result == "1.21428571429")
+  }
+
+  test("mprt finds protein motifs"){
+
+
+    //val result = Problems.mprt()
   }
 }

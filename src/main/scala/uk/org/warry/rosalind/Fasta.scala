@@ -6,7 +6,7 @@ import scala.collection.immutable._
  * Methods for reading Fasta format files.
  * These consist of one or more records the consist of:
  *  - a title line which begins with '>'
- *  - one or more lines of dna base string
+ *  - one or more lines of dna base string or sequence of amino acids
  */
 object Fasta {
 
@@ -24,4 +24,6 @@ object Fasta {
     val result = lines.foldLeft (List[(String, StringBuilder)]()) (processLine)
     result.map(x => (x._1, x._2.toString()))
   }
+
+
 }

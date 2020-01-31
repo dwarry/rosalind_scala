@@ -1,5 +1,6 @@
 package uk.org.warry.rosalind
 
+import uk.org.warry.rosalind.AminoAcid.AminoAcid
 import uk.org.warry.rosalind.DnaBase.DnaBase
 
 /**
@@ -19,6 +20,7 @@ object Problems {
       case "hamm" => hamm(arguments.next(), arguments.next())
       case "gc" => gc(arguments)
       case "iprb" => iprb(arguments.next(), arguments.next(), arguments.next())
+      case "mprt" => mprt(arguments)
       case "prot" => prot(arguments.next())
       case "prtm" => prtm(arguments.next())
       case "rna" => rna(arguments.next())
@@ -118,6 +120,40 @@ object Problems {
     val result = Probability.dominantProbability(k.toInt, m.toInt, n.toInt)
 
     "%1.5f".format(result)
+  }
+
+  def mprt(proteinIds: Iterator[String]): String = {
+    def appendResultToStringBuilder(sb: StringBuilder, entry:(String, Iterator[Int])): StringBuilder ={
+      sb.append(entry._1.split('|')(1))
+      sb.append("\n")
+
+      val oneBasedResults = entry._2.map(_ + 1)
+      sb.append(oneBasedResults.mkString(" "))
+      sb.append("\n")
+    }
+
+    val proteins = proteinIds.flatMap(Uniprot.get)
+
+    val result = mprt_core(proteins)
+
+    result.foldLeft (new StringBuilder()) (appendResultToStringBuilder).toString
+  }
+
+  /**
+   * The actual implementation of the MPRT problem, decoupled from retrieving them from the Uniprot website.
+   * @param proteins tuples of the uniprot id and sequence of amino acids.
+   * @return tuples of the uniprot id and the 0-based indexes of the motif positions.
+   */
+  def mprt_core(proteins: Iterator[(String, IndexedSeq[AminoAcid])]): Iterator[(String, Iterator[Int])] = {
+
+
+    // N{P}[ST]{P}.
+    val motif = Motif(Match(AminoAcid.N),
+      NotMatch(AminoAcid.P),
+      OneOf(AminoAcid.S, AminoAcid.T),
+      NotMatch(AminoAcid.P))
+
+    proteins.map(x => (x._1, motif.findAnyMatches(x._2))).filter(x => x._2.nonEmpty)
   }
 
   def prot(rnaString: String): String = {
