@@ -123,36 +123,44 @@ object Problems {
   }
 
   def mprt(proteinIds: Iterator[String]): String = {
+    // generate the output in the required format, appending it to a stringbuilder
     def appendResultToStringBuilder(sb: StringBuilder, entry:(String, Iterator[Int])): StringBuilder ={
-      sb.append(entry._1.split('|')(1))
+      sb.append(entry._1)
       sb.append("\n")
 
+      // need one-based results, not zero-based, so increment all the matched indexes
       val oneBasedResults = entry._2.map(_ + 1)
       sb.append(oneBasedResults.mkString(" "))
       sb.append("\n")
     }
 
-    val proteins = proteinIds.flatMap(Uniprot.get)
+    // just take the first result, and preserve the original Id
+    val proteins = proteinIds.map(x => (x, Uniprot.get(x).head._2))
 
+    // find any matches
     val result = mprt_core(proteins)
 
+    // Generate the output and return the string.
     result.foldLeft (new StringBuilder()) (appendResultToStringBuilder).toString
   }
 
   /**
-   * The actual implementation of the MPRT problem, decoupled from retrieving them from the Uniprot website.
+   * The actual implementation of the MPRT problem, decoupled from retrieving them from the Uniprot website, and
+   * generating the output in the required format.
    * @param proteins tuples of the uniprot id and sequence of amino acids.
    * @return tuples of the uniprot id and the 0-based indexes of the motif positions.
    */
   def mprt_core(proteins: Iterator[(String, IndexedSeq[AminoAcid])]): Iterator[(String, Iterator[Int])] = {
 
-
+    // Our motif in question - the N-glycosylation
     // N{P}[ST]{P}.
-    val motif = Motif(Match(AminoAcid.N),
+    val motif = Motif(
+      Match(AminoAcid.N),
       NotMatch(AminoAcid.P),
       OneOf(AminoAcid.S, AminoAcid.T),
       NotMatch(AminoAcid.P))
 
+    // check each Amino Acid sequence for the motif, and return those with matches
     proteins.map(x => (x._1, motif.findAnyMatches(x._2))).filter(x => x._2.nonEmpty)
   }
 
