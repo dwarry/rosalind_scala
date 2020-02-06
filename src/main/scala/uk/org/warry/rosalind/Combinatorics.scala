@@ -60,7 +60,7 @@ object Combinatorics {
   def fibd(n: Int, m:Int): BigInt  = {
 
     // previously computed values.
-    var memo = scala.collection.mutable.HashMap((1, BigInt(1)), (2, BigInt(1)))
+    val memo = scala.collection.mutable.HashMap((1, BigInt(1)), (2, BigInt(1)))
 
     // Does the actual calculation - only calculate the value of the intermediate results once.
     def mortalFib(i: Int): BigInt = {
