@@ -77,6 +77,15 @@ object AminoAcid extends Enumeration {
    */
   def fromString(aaString: String): Iterator[AminoAcid] = aaString.iterator.map(fromChar)
 
+  def isStartCodon(codon: Seq[RnaBase]): Boolean = {
+    codon match {
+      case Seq(RnaBase.A, RnaBase.U, RnaBase.G) => true
+      case _ => false
+    }
+  }
+
+  def isEndCodon(codon: Seq[RnaBase]): Boolean = codonToAminoAcid(codon).isEmpty
+
   /**
    * Translate a codon (three RnaBases) to the corresponding Amino Acid, or Stop value
    * @param codon - sequence of three RnaBases

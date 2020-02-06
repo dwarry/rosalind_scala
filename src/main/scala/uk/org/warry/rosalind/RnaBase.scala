@@ -1,5 +1,6 @@
 package uk.org.warry.rosalind
 
+import uk.org.warry.rosalind.AminoAcid.AminoAcid
 import uk.org.warry.rosalind.DnaBase.DnaBase
 
 /**
@@ -68,4 +69,51 @@ object RnaBase extends Enumeration {
    * @return iterator of Codons (three RNA bases)
    */
   def rnaStringToCodons(bases: Iterator[RnaBase]): bases.GroupedIterator[RnaBase] = bases.grouped(3).withPartial(false)
+
+  def findProteinString(bases: Iterator[RnaBase]): Seq[List[AminoAcid]] = {
+    case class Accumulator(proteinStrings: List[List[AminoAcid]],
+                           inCodingRegion: Boolean,
+                           currentProteinString: List[AminoAcid]) {
+      def startNewProteinString(): Accumulator = Accumulator(this.proteinStrings, inCodingRegion = true, List(AminoAcid.M))
+
+      def endCurrentProteinString(): Accumulator = {
+
+        val newProteinString = this.currentProteinString.reverse
+
+        // need to find any substrings that begin with M as well
+        val newProteinStrings =
+          (newProteinString.tails.foldLeft
+             (this.proteinStrings)
+             ((acc, x) => if (x.headOption.contains(AminoAcid.M)) x :: acc else acc))
+
+        Accumulator(newProteinStrings, inCodingRegion = false, List.empty[AminoAcid])
+      }
+
+      def appendToCurrentProteinString(aa: AminoAcid): Accumulator =
+        this.copy(currentProteinString = aa :: this.currentProteinString)
+
+    }
+
+    val res = (rnaStringToCodons(bases).foldLeft
+        (Accumulator(List.empty[List[AminoAcid]], inCodingRegion = false, List.empty[AminoAcid]))
+        ((acc, codon) => {
+          val aa = AminoAcid.codonToAminoAcid(codon)
+          aa match {
+            case None              if acc.inCodingRegion  => acc.endCurrentProteinString()
+            case Some(AminoAcid.M) if !acc.inCodingRegion => acc.startNewProteinString()
+            case Some(nextAA)      if acc.inCodingRegion  => acc.appendToCurrentProteinString(nextAA)
+            case _                                        => acc
+          }
+        }))
+
+    // what happens if we end mid-protein string?
+    res.proteinStrings
+
+    /*
+    if (res.currentProteinString.isEmpty)
+      res.proteinStrings
+    else
+      res.currentProteinString.reverse :: res.proteinStrings
+    */
+  }
 }

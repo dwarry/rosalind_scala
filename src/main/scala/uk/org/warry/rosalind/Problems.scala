@@ -2,6 +2,7 @@ package uk.org.warry.rosalind
 
 import uk.org.warry.rosalind.AminoAcid.AminoAcid
 import uk.org.warry.rosalind.DnaBase.DnaBase
+import uk.org.warry.rosalind.RnaBase.RnaBase
 
 /**
  * Simple object which dispatches the inputs to the correct method. When you add a new solution, add it to the match
@@ -21,6 +22,7 @@ object Problems {
       case "gc" => gc(arguments)
       case "iprb" => iprb(arguments.next(), arguments.next(), arguments.next())
       case "mprt" => mprt(arguments)
+      case "orf" => orf(arguments)
       case "prot" => prot(arguments.next())
       case "prtm" => prtm(arguments.next())
       case "rna" => rna(arguments.next())
@@ -162,6 +164,18 @@ object Problems {
 
     // check each Amino Acid sequence for the motif, and return those with matches
     proteins.map(x => (x._1, motif.findAnyMatches(x._2))).filter(x => x._2.nonEmpty)
+  }
+
+  def orf(dnaFasta: Iterator[String]): String = {
+
+    val dna = Fasta.processLines(dnaFasta).head._2.map(DnaBase.fromChar)
+
+    val orfRna = DnaBase.openReadingFrames(dna).map(dnaString => dnaString.map(DnaBase.toRnaBase))
+    
+    val proteinStrings = orfRna.flatMap(x => RnaBase.findProteinString(x.iterator))
+      
+    proteinStrings.map(x => x.map(AminoAcid.toChar).mkString).distinct.mkString("\n")
+
   }
 
   def prot(rnaString: String): String = {

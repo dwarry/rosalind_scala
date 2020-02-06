@@ -1,10 +1,14 @@
 package uk.org.warry.rosalind
 import org.scalatest.FunSuite
-
+import org.scalatest.Matchers._
 import scala.collection.immutable.ArraySeq
 
 //noinspection SpellCheckingInspection
 class ProblemsTest extends FunSuite {
+  private def splitAtNewLines(s: String) = {
+    s.split(raw"\r?\n")
+  }
+
 
   test("Problem1 counts bases") {
 
@@ -141,5 +145,17 @@ class ProblemsTest extends FunSuite {
 
 
     //val result = Problems.mprt()
+  }
+
+  test("orf finds protein strings in Open Reading Frames") {
+    val data = """>Rosalind_99
+                 |AGCCATGTAGCTAACTCAGGTTACATGGGGATGACCCCGCGACTTGGATTAGAGTCTCTTTTGGAATAAGCCTGAATGATCCGAGTAGCATCTCAG""".stripMargin
+
+    val result = splitAtNewLines( Problems.orf(splitAtNewLines(data).iterator))
+
+    result should contain ("MLLGSFRLIPKETLIQVAGSSPCNLS")
+    result should contain ("M")
+    result should contain ("MGMTPRLGLESLLE")
+    result should contain ("MTPRLGLESLLE")
   }
 }

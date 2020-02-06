@@ -122,6 +122,27 @@ object DnaBase extends Enumeration {
       case (DnaBase.T, DnaBase.C) => true
       case _                      => false
     }
+
+  /**
+   * Find the six Open Reading Frames for a sequence of bases: these are the three consisting of the sequence itself,
+   * and the sub-sequences starting at offsets 1 and 2. The other three are the corresponding sequences derived from
+   * the complement of the starting sequence
+   * @param bases the sequence of DnaBases under consideration
+   * @return the Open Reading Frames for the bases.
+   */
+  def openReadingFrames(bases: Seq[DnaBase]): List[Seq[DnaBase]] = {
+    val basesList = bases.toList
+    val compList = complement(bases.iterator).toList
+
+    List(
+      basesList,
+      basesList.tail,
+      basesList.tail.tail,
+      compList,
+      compList.tail,
+      compList.tail.tail
+    )
+  }
 }
 
 /**
