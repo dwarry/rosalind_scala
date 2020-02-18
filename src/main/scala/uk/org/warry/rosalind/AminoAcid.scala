@@ -1,8 +1,5 @@
 package uk.org.warry.rosalind
 
-import java.awt.geom.NoninvertibleTransformException
-
-import uk.org.warry.rosalind.DnaBase.DnaBase
 import uk.org.warry.rosalind.RnaBase.RnaBase
 
 import scala.collection.Iterator
